@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 //------------------------------------------------------------------------------
-// Creation div to containt H1
+// DOM manipulations
 //------------------------------------------------------------------------------
 const wrapper = document.createElement("div");
 document.body.appendChild(wrapper);
@@ -19,14 +19,13 @@ wrapper.style.alignItems = "center";
 wrapper.style.paddingLeft = "100px";
 wrapper.style.paddingRight = "100px";
 wrapper.id = "wrapper";
-//------------------------------------------------------------------------------
-// Creation the H1 when you creat the elemet
-//------------------------------------------------------------------------------
 const titleH1 = document.createElement("h1");
 titleH1.innerHTML = "School-Students";
 titleH1.id = "tittle-h1";
 titleH1.style.textAlign = "center";
 wrapper.appendChild(titleH1);
+//------------------------------------------------------------------------------
+// classes / interfaces
 //------------------------------------------------------------------------------
 class Student {
     //constructor to inicialize the properties
@@ -62,21 +61,32 @@ studentsPromise.then((data) => {
     // manage data received parsed in TS
     // parse data that is object[] => Student[]
     console.log(data);
-    console.log(data.length);
+    console.log("Data length:", data.length);
     let students = [];
     for (let i = 0; i < data.length; i++) {
         const student = new Student(data[i].id, data[i].firstName, data[i].lastName, data[i].age, data[i].sex);
         students.push(student);
     }
-    console.log(students);
+    console.log("data:", students);
     const studentsTable = createTable();
-    createTableHeader(studentsTable);
-    createTableBody(studentsTable);
+    createTableHeader(studentsTable, students);
+    createTableBody(studentsTable, students);
 });
 //------------------------------------------------------------------------------
 // global functions
 //------------------------------------------------------------------------------
-function createTableHeader(table) {
+function createTable() {
+    const table = document.createElement("table");
+    table.style.margin = "auto";
+    table.style.borderCollapse = "collapse";
+    table.style.width = "100%";
+    table.style.backgroundColor = "lightgrey";
+    table.style.border = "1px solid black";
+    table.id = "students-table";
+    wrapper.appendChild(table);
+    return table;
+}
+function createTableHeader(table, students) {
     const tableHead = document.createElement("tr");
     table.appendChild(tableHead);
     for (let i = 0; i <= 4; i++) {
@@ -107,18 +117,7 @@ function createTableHeader(table) {
         }
     }
 }
-function createTable() {
-    const table = document.createElement("table");
-    table.style.margin = "auto";
-    table.style.borderCollapse = "collapse";
-    table.style.width = "100%";
-    table.style.backgroundColor = "lightgrey";
-    table.style.border = "1px solid black";
-    table.id = "students-table";
-    wrapper.appendChild(table);
-    return table;
-}
-function createTableBody(table) {
+function createTableBody(table, students) {
     for (let i = 1; i <= 10; i++) {
         const row = document.createElement("tr");
         for (let j = 0; j <= 4; j++) {
@@ -133,7 +132,7 @@ function createTableBody(table) {
     }
 }
 //------------------------------------------------------------------------------
-//fetchin the data from API
+// async functions
 //------------------------------------------------------------------------------
 function getFromDataBase(endpoint) {
     return __awaiter(this, void 0, void 0, function* () {

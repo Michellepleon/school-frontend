@@ -72,7 +72,7 @@ studentsPromise.then((data) => {
   // manage data received parsed in TS
   // parse data that is object[] => Student[]
   console.log(data);
-  console.log(data.length);
+  console.log("Data length:", data.length);
 
   let students: Student[] = [];
 
@@ -87,7 +87,7 @@ studentsPromise.then((data) => {
     students.push(student);
   }
 
-  console.log(students);
+  console.log("data:", students);
 
   const studentsTable: HTMLTableElement = createTable();
   createTableHeader(studentsTable, students);
