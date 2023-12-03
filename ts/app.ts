@@ -25,7 +25,7 @@ class Student {
   private lastName: string;
   private sex: string;
   private age: number;
-  //constructor to inicialize the properties
+  //constructor to initialize the properties
   constructor(
     id: number,
     firstName: string,
@@ -76,6 +76,15 @@ studentsPromise.then((data) => {
 
   let students: Student[] = [];
 
+  newFunction(data, students);
+
+  console.log("data:", students);
+
+  const studentsTable: HTMLTableElement = createTable();
+  createTableHeader(studentsTable, students);
+  createTableBody(studentsTable, students);
+});
+function newFunction(data: StudentData[], students: Student[]) {
   for (let i: number = 0; i < data.length; i++) {
     const student: Student = new Student(
       data[i].id,
@@ -86,13 +95,8 @@ studentsPromise.then((data) => {
     );
     students.push(student);
   }
+}
 
-  console.log("data:", students);
-
-  const studentsTable: HTMLTableElement = createTable();
-  createTableHeader(studentsTable, students);
-  createTableBody(studentsTable, students);
-});
 //------------------------------------------------------------------------------
 // global functions
 //------------------------------------------------------------------------------
@@ -115,7 +119,7 @@ function createTableHeader(table: HTMLTableElement, students: Student[]) {
   for (let i: number = 0; i <= 4; i++) {
     tableHead.insertCell(i);
     const tableHeadCell: HTMLTableCellElement = tableHead.cells[i];
-    tableHeadCell.style.border = "3px solide black";
+    tableHeadCell.style.border = "3px solid black";
     tableHeadCell.style.padding = "4px";
     tableHeadCell.style.backgroundColor = "grey";
     tableHeadCell.style.fontWeight = "bolder";
