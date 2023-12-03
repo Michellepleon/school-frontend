@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Creation div to containt H1
+// DOM manipulations
 //------------------------------------------------------------------------------
 const wrapper: HTMLDivElement = document.createElement("div");
 document.body.appendChild(wrapper);
@@ -9,22 +9,14 @@ wrapper.style.alignItems = "center";
 wrapper.style.paddingLeft = "100px";
 wrapper.style.paddingRight = "100px";
 wrapper.id = "wrapper";
-//------------------------------------------------------------------------------
-// Creation the H1 when you creat the elemet
-//------------------------------------------------------------------------------
+
 const titleH1: HTMLHeadingElement = document.createElement("h1");
 titleH1.innerHTML = "School-Students";
 titleH1.id = "tittle-h1";
 titleH1.style.textAlign = "center";
 wrapper.appendChild(titleH1);
 //------------------------------------------------------------------------------
-interface StudentData {
-  id: number;
-  firstName: string;
-  lastName: string;
-  sex: string;
-  age: number;
-}
+// classes / interfaces
 //------------------------------------------------------------------------------
 class Student {
   //class properties
@@ -64,6 +56,14 @@ class Student {
     return this.sex;
   }
 }
+
+interface StudentData {
+  id: number;
+  firstName: string;
+  lastName: string;
+  sex: string;
+  age: number;
+}
 //------------------------------------------------------------------------------
 // Creation the table students (ASYNC)
 //------------------------------------------------------------------------------
@@ -90,13 +90,25 @@ studentsPromise.then((data) => {
   console.log(students);
 
   const studentsTable: HTMLTableElement = createTable();
-  createTableHeader(studentsTable);
-  createTableBody(studentsTable);
+  createTableHeader(studentsTable, students);
+  createTableBody(studentsTable, students);
 });
 //------------------------------------------------------------------------------
 // global functions
 //------------------------------------------------------------------------------
-function createTableHeader(table: HTMLTableElement) {
+function createTable() {
+  const table: HTMLTableElement = document.createElement("table");
+  table.style.margin = "auto";
+  table.style.borderCollapse = "collapse";
+  table.style.width = "100%";
+  table.style.backgroundColor = "lightgrey";
+  table.style.border = "1px solid black";
+  table.id = "students-table";
+  wrapper.appendChild(table);
+  return table;
+}
+
+function createTableHeader(table: HTMLTableElement, students: Student[]) {
   const tableHead: HTMLTableRowElement = document.createElement("tr");
   table.appendChild(tableHead);
 
@@ -129,19 +141,7 @@ function createTableHeader(table: HTMLTableElement) {
   }
 }
 
-function createTable() {
-  const table: HTMLTableElement = document.createElement("table");
-  table.style.margin = "auto";
-  table.style.borderCollapse = "collapse";
-  table.style.width = "100%";
-  table.style.backgroundColor = "lightgrey";
-  table.style.border = "1px solid black";
-  table.id = "students-table";
-  wrapper.appendChild(table);
-  return table;
-}
-
-function createTableBody(table: HTMLTableElement) {
+function createTableBody(table: HTMLTableElement, students: Student[]) {
   for (let i: number = 1; i <= 10; i++) {
     const row: HTMLTableRowElement = document.createElement("tr");
     for (let j: number = 0; j <= 4; j++) {
@@ -156,7 +156,7 @@ function createTableBody(table: HTMLTableElement) {
   }
 }
 //------------------------------------------------------------------------------
-//fetchin the data from API
+// async functions
 //------------------------------------------------------------------------------
 async function getFromDataBase(endpoint: string) {
   try {
