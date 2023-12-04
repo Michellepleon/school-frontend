@@ -28,7 +28,7 @@ wrapper.appendChild(titleH1);
 // classes / interfaces
 //------------------------------------------------------------------------------
 class Student {
-    //constructor to inicialize the properties
+    //constructor to initialize the properties
     constructor(id, firstName, lastName, age, sex) {
         this.id = id;
         this.firstName = firstName;
@@ -62,14 +62,10 @@ studentsPromise.then((data) => {
     // parse data that is object[] => Student[]
     console.log(data);
     console.log("Data length:", data.length);
-    let students = [];
-    for (let i = 0; i < data.length; i++) {
-        const student = new Student(data[i].id, data[i].firstName, data[i].lastName, data[i].age, data[i].sex);
-        students.push(student);
-    }
+    const students = parseObjetToStudentType(data);
     console.log("data:", students);
     const studentsTable = createTable();
-    createTableHeader(studentsTable, students);
+    createTableHeader(studentsTable);
     createTableBody(studentsTable, students);
 });
 //------------------------------------------------------------------------------
@@ -86,13 +82,13 @@ function createTable() {
     wrapper.appendChild(table);
     return table;
 }
-function createTableHeader(table, students) {
+function createTableHeader(table) {
     const tableHead = document.createElement("tr");
     table.appendChild(tableHead);
     for (let i = 0; i <= 4; i++) {
         tableHead.insertCell(i);
         const tableHeadCell = tableHead.cells[i];
-        tableHeadCell.style.border = "3px solide black";
+        tableHeadCell.style.border = "3px solid black";
         tableHeadCell.style.padding = "4px";
         tableHeadCell.style.backgroundColor = "grey";
         tableHeadCell.style.fontWeight = "bolder";
@@ -109,27 +105,51 @@ function createTableHeader(table, students) {
                 tableHeadCell.textContent = "Last Name";
                 break;
             case 3:
-                tableHeadCell.textContent = "Age";
+                tableHeadCell.textContent = "Sex";
                 break;
             case 4:
-                tableHeadCell.textContent = "Sex";
+                tableHeadCell.textContent = "Age";
                 break;
         }
     }
 }
 function createTableBody(table, students) {
-    for (let i = 1; i <= 10; i++) {
+    for (let i = 1; i < students.length; i++) {
         const row = document.createElement("tr");
         for (let j = 0; j <= 4; j++) {
             row.insertCell(j);
             const tableCell = row.cells[j];
-            tableCell.textContent = "Michelle";
+            switch (j) {
+                case 0:
+                    tableCell.textContent = students[i].getId().toString();
+                    break;
+                case 1:
+                    tableCell.textContent = students[i].getFirstName();
+                    break;
+                case 2:
+                    tableCell.textContent = students[i].getLastName();
+                    break;
+                case 3:
+                    tableCell.textContent = students[i].getSex();
+                    break;
+                case 4:
+                    tableCell.textContent = students[i].getAge().toString();
+                    break;
+            }
             tableCell.style.border = "1px solid black";
             tableCell.style.padding = "4px";
             tableCell.style.textAlign = "center";
         }
         table.appendChild(row);
     }
+}
+function parseObjetToStudentType(data) {
+    let students = [];
+    for (let i = 0; i < data.length; i++) {
+        const student = new Student(data[i].id, data[i].firstName, data[i].lastName, data[i].age, data[i].sex);
+        students.push(student);
+    }
+    return students;
 }
 //------------------------------------------------------------------------------
 // async functions

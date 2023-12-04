@@ -74,33 +74,18 @@ studentsPromise.then((data) => {
   console.log(data);
   console.log("Data length:", data.length);
 
-  let students: Student[] = [];
-
-  newFunction(data, students);
+  const students: Student[] = parseObjetToStudentType(data);
 
   console.log("data:", students);
 
   const studentsTable: HTMLTableElement = createTable();
-  createTableHeader(studentsTable, students);
+  createTableHeader(studentsTable);
   createTableBody(studentsTable, students);
 });
-function newFunction(data: StudentData[], students: Student[]) {
-  for (let i: number = 0; i < data.length; i++) {
-    const student: Student = new Student(
-      data[i].id,
-      data[i].firstName,
-      data[i].lastName,
-      data[i].age,
-      data[i].sex
-    );
-    students.push(student);
-  }
-}
-
 //------------------------------------------------------------------------------
 // global functions
 //------------------------------------------------------------------------------
-function createTable() {
+function createTable(): HTMLTableElement {
   const table: HTMLTableElement = document.createElement("table");
   table.style.margin = "auto";
   table.style.borderCollapse = "collapse";
@@ -112,7 +97,7 @@ function createTable() {
   return table;
 }
 
-function createTableHeader(table: HTMLTableElement, students: Student[]) {
+function createTableHeader(table: HTMLTableElement): void {
   const tableHead: HTMLTableRowElement = document.createElement("tr");
   table.appendChild(tableHead);
 
@@ -136,22 +121,38 @@ function createTableHeader(table: HTMLTableElement, students: Student[]) {
         tableHeadCell.textContent = "Last Name";
         break;
       case 3:
-        tableHeadCell.textContent = "Age";
+        tableHeadCell.textContent = "Sex";
         break;
       case 4:
-        tableHeadCell.textContent = "Sex";
+        tableHeadCell.textContent = "Age";
         break;
     }
   }
 }
 
-function createTableBody(table: HTMLTableElement, students: Student[]) {
-  for (let i: number = 1; i <= 10; i++) {
+function createTableBody(table: HTMLTableElement, students: Student[]): void {
+  for (let i: number = 1; i < students.length; i++) {
     const row: HTMLTableRowElement = document.createElement("tr");
     for (let j: number = 0; j <= 4; j++) {
       row.insertCell(j);
       const tableCell: HTMLTableCellElement = row.cells[j];
-      tableCell.textContent = "Michelle";
+      switch (j) {
+        case 0:
+          tableCell.textContent = students[i].getId().toString();
+          break;
+        case 1:
+          tableCell.textContent = students[i].getFirstName();
+          break;
+        case 2:
+          tableCell.textContent = students[i].getLastName();
+          break;
+        case 3:
+          tableCell.textContent = students[i].getSex();
+          break;
+        case 4:
+          tableCell.textContent = students[i].getAge().toString();
+          break;
+      }
       tableCell.style.border = "1px solid black";
       tableCell.style.padding = "4px";
       tableCell.style.textAlign = "center";
@@ -159,10 +160,27 @@ function createTableBody(table: HTMLTableElement, students: Student[]) {
     table.appendChild(row);
   }
 }
+
+function parseObjetToStudentType(data: StudentData[]): Student[] {
+  let students: Student[] = [];
+
+  for (let i: number = 0; i < data.length; i++) {
+    const student: Student = new Student(
+      data[i].id,
+      data[i].firstName,
+      data[i].lastName,
+      data[i].age,
+      data[i].sex
+    );
+    students.push(student);
+  }
+
+  return students;
+}
 //------------------------------------------------------------------------------
 // async functions
 //------------------------------------------------------------------------------
-async function getFromDataBase(endpoint: string) {
+async function getFromDataBase(endpoint: string): Promise<StudentData[]> {
   try {
     const response: Response = await fetch(`http://localhost:8000${endpoint}`);
 
